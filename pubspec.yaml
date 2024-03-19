@@ -35,6 +35,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.0
+  flutter_timeline_calendar: ^1.0.9
+  firebase_core: ^2.27.1
+  cloud_firestore: ^4.15.9
   
 
 dev_dependencies:

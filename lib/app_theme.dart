@@ -11,8 +11,43 @@ class AppTheme {
   static Color whiteColor = Color(0xffffffff);
 
   static ThemeData lightTheme = ThemeData(
-    appBarTheme: AppBarTheme(backgroundColor: primaryColor),
+    primaryColor: primaryColor,
+    appBarTheme: AppBarTheme(
+        backgroundColor: primaryColor,
+        titleTextStyle: TextStyle(
+          color: whiteColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 22,
+        )),
     scaffoldBackgroundColor: backgroundColorLight,
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      selectedItemColor: primaryColor,
+      unselectedItemColor: greyColor,
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: primaryColor,
+      foregroundColor: whiteColor,
+      shape: CircleBorder(side: BorderSide(color: whiteColor, width: 3)),
+    ),
+    textTheme: TextTheme(
+      bodyLarge: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w400,
+        color: blackColor,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: primaryColor,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: blackColor,
+      ),
+    ),
   );
   static ThemeData darkTheme = ThemeData(
     appBarTheme: AppBarTheme(backgroundColor: primaryColor),
