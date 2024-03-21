@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/app_theme.dart';
+import 'package:todo/firebase_utils.dart';
+import 'package:todo/models/task_model.dart';
 import 'package:todo/tabs/tasks/default_elevated_button.dart';
 import 'package:todo/tabs/tasks/default_text_form_field.dart';
+import 'package:todo/tabs/tasks/tasks_provider.dart';
 
 class AddTaskBottomSheet extends StatefulWidget {
   @override
@@ -59,12 +63,15 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                 lastDate: DateTime.now().add(
                   const Duration(days: 365),
                 ),
-                initialDate: DateTime.now(),
+                initialDate: selectedDate,
               );
-              if (dateTime != null) selectedDate = dateTime;
+              if (dateTime != null) {
+                selectedDate = dateTime;
+                setState(() {});
+              }
             },
             child: Text(
-              dateFormat.format(DateTime.now()),
+              dateFormat.format(selectedDate),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -80,5 +87,18 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
     );
   }
 
-  void addTask() {}
+  void addTask() {
+    FirebaseUtils.addTaskToFirebase(
+      TaskModel(
+        title: titleController.text,
+        description: descriptionController.text,
+        dateTime: selectedDate,
+      ),
+    ).timeout(const Duration(milliseconds: 500), onTimeout: () {
+      Provider.of<TasksProvider>(context, listen: false).getTasks();
+      Navigator.of(context).pop();
+    }).catchError((error) {
+      Navigator.of(context).pop();
+    });
+  }
 }

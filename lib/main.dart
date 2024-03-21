@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,14 +6,25 @@ import 'package:todo/app_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:todo/home_screen.dart';
 import 'package:todo/tabs/settings/settings_provider.dart';
+import 'package:todo/tabs/tasks/tasks_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(ChangeNotifierProvider(
-    create: (_) => SettingsProvider(),
-    child: TodoApp(),
-  ));
+  await FirebaseFirestore.instance.disableNetwork();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SettingsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TasksProvider()..getTasks(),
+        )
+      ],
+      child: TodoApp(),
+    ),
+  );
 }
 
 class TodoApp extends StatelessWidget {

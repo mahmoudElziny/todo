@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_timeline_calendar/timeline/model/calendar_options.dart';
+import 'package:flutter_timeline_calendar/timeline/model/datetime.dart';
 import 'package:flutter_timeline_calendar/timeline/model/day_options.dart';
 import 'package:flutter_timeline_calendar/timeline/model/headers_options.dart';
 import 'package:flutter_timeline_calendar/timeline/utils/calendar_types.dart';
 import 'package:flutter_timeline_calendar/timeline/widget/timeline_calendar.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/tabs/tasks/task_item.dart';
+import 'package:todo/tabs/tasks/tasks_provider.dart';
 
 class TasksTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final tasksProvider = Provider.of<TasksProvider>(context);
     return Column(
       children: [
         TimelineCalendar(
@@ -33,17 +36,23 @@ class TasksTab extends StatelessWidget {
               monthStringType: MonthStringTypes.FULL,
               backgroundColor: Theme.of(context).primaryColor,
               headerTextColor: Colors.black),
-          onChangeDateTime: (datetime) {
-            print(datetime.getDate());
+          dateTime: CalendarDateTime(
+            year: tasksProvider.selectedDate.year,
+            month: tasksProvider.selectedDate.month,
+            day: tasksProvider.selectedDate.day,
+          ),
+          onChangeDateTime: (calendarDatetime) {
+            tasksProvider.changeSelectedDate(calendarDatetime.toDateTime());
           },
         ),
-        SizedBox(
+        const SizedBox(
           height: 8,
         ),
         Expanded(
           child: ListView.builder(
-            itemBuilder: (context, index) => TaskItem(),
-            itemCount: 10,
+            itemBuilder: (context, index) =>
+                TaskItem(tasksProvider.tasks[index]),
+            itemCount: tasksProvider.tasks.length,
           ),
         )
       ],
